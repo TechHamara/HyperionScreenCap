@@ -31,6 +31,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SetupForm));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPageGeneric = new System.Windows.Forms.TabPage();
+            this.chkCaptureOnStartup = new System.Windows.Forms.CheckBox();
             this.cbMessagePriority = new System.Windows.Forms.ComboBox();
             this.lblMessagePriority = new System.Windows.Forms.Label();
             this.cbMonitorIndex = new System.Windows.Forms.ComboBox();
@@ -42,6 +43,15 @@
             this.tbIPHostName = new System.Windows.Forms.TextBox();
             this.lblIPHostName = new System.Windows.Forms.Label();
             this.tabPageAdvanced = new System.Windows.Forms.TabPage();
+            this.grpDeactivate = new System.Windows.Forms.GroupBox();
+            this.chkApiExcludeTimesEnabled = new System.Windows.Forms.CheckBox();
+            this.tbApiExcludeEnd = new System.Windows.Forms.TextBox();
+            this.lblEnd = new System.Windows.Forms.Label();
+            this.tbApiExcludeStart = new System.Windows.Forms.TextBox();
+            this.lblStart = new System.Windows.Forms.Label();
+            this.lblApiPort = new System.Windows.Forms.Label();
+            this.tbApiPort = new System.Windows.Forms.TextBox();
+            this.chkApiEnabled = new System.Windows.Forms.CheckBox();
             this.tbReconnectInterval = new System.Windows.Forms.TextBox();
             this.lblReconnectInterval = new System.Windows.Forms.Label();
             this.tbCaptureInterval = new System.Windows.Forms.TextBox();
@@ -53,9 +63,11 @@
             this.tbMessageDuration = new System.Windows.Forms.TextBox();
             this.lblMessageDuration = new System.Windows.Forms.Label();
             this.btnSaveExit = new System.Windows.Forms.Button();
+            this.lblVersion = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPageGeneric.SuspendLayout();
             this.tabPageAdvanced.SuspendLayout();
+            this.grpDeactivate.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -71,6 +83,7 @@
             // tabPageGeneric
             // 
             this.tabPageGeneric.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPageGeneric.Controls.Add(this.chkCaptureOnStartup);
             this.tabPageGeneric.Controls.Add(this.cbMessagePriority);
             this.tabPageGeneric.Controls.Add(this.lblMessagePriority);
             this.tabPageGeneric.Controls.Add(this.cbMonitorIndex);
@@ -87,6 +100,16 @@
             this.tabPageGeneric.Size = new System.Drawing.Size(689, 270);
             this.tabPageGeneric.TabIndex = 0;
             this.tabPageGeneric.Text = "Generic";
+            // 
+            // chkCaptureOnStartup
+            // 
+            this.chkCaptureOnStartup.AutoSize = true;
+            this.chkCaptureOnStartup.Location = new System.Drawing.Point(9, 197);
+            this.chkCaptureOnStartup.Name = "chkCaptureOnStartup";
+            this.chkCaptureOnStartup.Size = new System.Drawing.Size(144, 17);
+            this.chkCaptureOnStartup.TabIndex = 19;
+            this.chkCaptureOnStartup.Text = "Start capture on first start";
+            this.chkCaptureOnStartup.UseVisualStyleBackColor = true;
             // 
             // cbMessagePriority
             // 
@@ -193,6 +216,10 @@
             // tabPageAdvanced
             // 
             this.tabPageAdvanced.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPageAdvanced.Controls.Add(this.grpDeactivate);
+            this.tabPageAdvanced.Controls.Add(this.lblApiPort);
+            this.tabPageAdvanced.Controls.Add(this.tbApiPort);
+            this.tabPageAdvanced.Controls.Add(this.chkApiEnabled);
             this.tabPageAdvanced.Controls.Add(this.tbReconnectInterval);
             this.tabPageAdvanced.Controls.Add(this.lblReconnectInterval);
             this.tabPageAdvanced.Controls.Add(this.tbCaptureInterval);
@@ -209,6 +236,93 @@
             this.tabPageAdvanced.Size = new System.Drawing.Size(689, 270);
             this.tabPageAdvanced.TabIndex = 1;
             this.tabPageAdvanced.Text = "Advanced";
+            // 
+            // grpDeactivate
+            // 
+            this.grpDeactivate.Controls.Add(this.chkApiExcludeTimesEnabled);
+            this.grpDeactivate.Controls.Add(this.tbApiExcludeEnd);
+            this.grpDeactivate.Controls.Add(this.lblEnd);
+            this.grpDeactivate.Controls.Add(this.tbApiExcludeStart);
+            this.grpDeactivate.Controls.Add(this.lblStart);
+            this.grpDeactivate.Location = new System.Drawing.Point(395, 53);
+            this.grpDeactivate.Name = "grpDeactivate";
+            this.grpDeactivate.Size = new System.Drawing.Size(287, 106);
+            this.grpDeactivate.TabIndex = 13;
+            this.grpDeactivate.TabStop = false;
+            this.grpDeactivate.Text = "Disable API control during specified time range";
+            // 
+            // chkApiExcludeTimesEnabled
+            // 
+            this.chkApiExcludeTimesEnabled.AutoSize = true;
+            this.chkApiExcludeTimesEnabled.Location = new System.Drawing.Point(14, 23);
+            this.chkApiExcludeTimesEnabled.Name = "chkApiExcludeTimesEnabled";
+            this.chkApiExcludeTimesEnabled.Size = new System.Drawing.Size(65, 17);
+            this.chkApiExcludeTimesEnabled.TabIndex = 17;
+            this.chkApiExcludeTimesEnabled.Text = "Enabled";
+            this.chkApiExcludeTimesEnabled.UseVisualStyleBackColor = true;
+            // 
+            // tbApiExcludeEnd
+            // 
+            this.tbApiExcludeEnd.Location = new System.Drawing.Point(76, 75);
+            this.tbApiExcludeEnd.Name = "tbApiExcludeEnd";
+            this.tbApiExcludeEnd.Size = new System.Drawing.Size(50, 20);
+            this.tbApiExcludeEnd.TabIndex = 15;
+            this.tbApiExcludeEnd.Text = "21:00";
+            this.tbApiExcludeEnd.Validating += new System.ComponentModel.CancelEventHandler(this.tbExcludeEnd_Validating);
+            // 
+            // lblEnd
+            // 
+            this.lblEnd.AutoSize = true;
+            this.lblEnd.Location = new System.Drawing.Point(11, 78);
+            this.lblEnd.Name = "lblEnd";
+            this.lblEnd.Size = new System.Drawing.Size(29, 13);
+            this.lblEnd.TabIndex = 2;
+            this.lblEnd.Text = "End:";
+            // 
+            // tbApiExcludeStart
+            // 
+            this.tbApiExcludeStart.Location = new System.Drawing.Point(76, 50);
+            this.tbApiExcludeStart.Name = "tbApiExcludeStart";
+            this.tbApiExcludeStart.Size = new System.Drawing.Size(50, 20);
+            this.tbApiExcludeStart.TabIndex = 14;
+            this.tbApiExcludeStart.Text = "8:00";
+            this.tbApiExcludeStart.Validating += new System.ComponentModel.CancelEventHandler(this.tbExcludeStart_Validating);
+            // 
+            // lblStart
+            // 
+            this.lblStart.AutoSize = true;
+            this.lblStart.Location = new System.Drawing.Point(11, 53);
+            this.lblStart.Name = "lblStart";
+            this.lblStart.Size = new System.Drawing.Size(32, 13);
+            this.lblStart.TabIndex = 0;
+            this.lblStart.Text = "Start:";
+            // 
+            // lblApiPort
+            // 
+            this.lblApiPort.AutoSize = true;
+            this.lblApiPort.Location = new System.Drawing.Point(395, 17);
+            this.lblApiPort.Name = "lblApiPort";
+            this.lblApiPort.Size = new System.Drawing.Size(45, 13);
+            this.lblApiPort.TabIndex = 12;
+            this.lblApiPort.Text = "API port";
+            // 
+            // tbApiPort
+            // 
+            this.tbApiPort.Location = new System.Drawing.Point(446, 14);
+            this.tbApiPort.Name = "tbApiPort";
+            this.tbApiPort.Size = new System.Drawing.Size(60, 20);
+            this.tbApiPort.TabIndex = 11;
+            this.tbApiPort.Validating += new System.ComponentModel.CancelEventHandler(this.tbApiPort_Validating);
+            // 
+            // chkApiEnabled
+            // 
+            this.chkApiEnabled.AutoSize = true;
+            this.chkApiEnabled.Location = new System.Drawing.Point(512, 16);
+            this.chkApiEnabled.Name = "chkApiEnabled";
+            this.chkApiEnabled.Size = new System.Drawing.Size(79, 17);
+            this.chkApiEnabled.TabIndex = 10;
+            this.chkApiEnabled.Text = "Enable API";
+            this.chkApiEnabled.UseVisualStyleBackColor = true;
             // 
             // tbReconnectInterval
             // 
@@ -305,11 +419,22 @@
             this.btnSaveExit.UseVisualStyleBackColor = true;
             this.btnSaveExit.Click += new System.EventHandler(this.btnSaveExit_Click);
             // 
+            // lblVersion
+            // 
+            this.lblVersion.AutoSize = true;
+            this.lblVersion.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblVersion.Location = new System.Drawing.Point(9, 321);
+            this.lblVersion.Name = "lblVersion";
+            this.lblVersion.Size = new System.Drawing.Size(82, 13);
+            this.lblVersion.TabIndex = 11;
+            this.lblVersion.Text = "Version: 0.01";
+            // 
             // SetupForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(700, 353);
+            this.Controls.Add(this.lblVersion);
             this.Controls.Add(this.btnSaveExit);
             this.Controls.Add(this.tabControl1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -320,7 +445,10 @@
             this.tabPageGeneric.PerformLayout();
             this.tabPageAdvanced.ResumeLayout(false);
             this.tabPageAdvanced.PerformLayout();
+            this.grpDeactivate.ResumeLayout(false);
+            this.grpDeactivate.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
     }
 
@@ -350,5 +478,16 @@
     private System.Windows.Forms.TextBox tbReconnectInterval;
     private System.Windows.Forms.Label lblReconnectInterval;
     private System.Windows.Forms.Button btnSaveExit;
-  }
+    private System.Windows.Forms.Label lblApiPort;
+    private System.Windows.Forms.TextBox tbApiPort;
+    private System.Windows.Forms.CheckBox chkApiEnabled;
+        private System.Windows.Forms.GroupBox grpDeactivate;
+        private System.Windows.Forms.TextBox tbApiExcludeEnd;
+        private System.Windows.Forms.Label lblEnd;
+        private System.Windows.Forms.TextBox tbApiExcludeStart;
+        private System.Windows.Forms.Label lblStart;
+        private System.Windows.Forms.CheckBox chkApiExcludeTimesEnabled;
+        private System.Windows.Forms.CheckBox chkCaptureOnStartup;
+        private System.Windows.Forms.Label lblVersion;
+    }
 }

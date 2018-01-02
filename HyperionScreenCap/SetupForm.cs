@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Reflection;
 using System.Windows.Forms;
 using SlimDX.Windows;
 
@@ -18,10 +19,12 @@ namespace HyperionScreenCap
                 cbMonitorIndex.Items.Add(i);
             }
 
-            loadSettings();
+            LoadSettings();
+
+            lblVersion.Text = Assembly.GetExecutingAssembly().GetName().Version.ToString();
         }
 
-        private void loadSettings()
+        private void LoadSettings()
         {
             try
             {
@@ -35,6 +38,13 @@ namespace HyperionScreenCap
                 tbCaptureInterval.Text = Settings.CaptureInterval.ToString();
                 cbMonitorIndex.Text = Settings.MonitorIndex.ToString();
                 tbReconnectInterval.Text = Settings.ReconnectInterval.ToString();
+                chkCaptureOnStartup.Checked = Settings.CaptureOnStartup;
+                tbApiPort.Text = Settings.ApiPort.ToString();
+                chkApiEnabled.Checked = Settings.ApiEnabled;
+                chkApiExcludeTimesEnabled.Checked = Settings.ApiExcludedTimesEnabled;
+                tbApiExcludeStart.Text = Settings.ApiExcludeTimeStart.ToString("HH:mm");
+                tbApiExcludeEnd.Text = Settings.ApiExcludeTimeEnd.ToString("HH:mm");
+
                 cbNotificationLevel.Text = Settings.NotificationLevel.ToString();
             }
             catch (Exception ex)
@@ -45,13 +55,26 @@ namespace HyperionScreenCap
 
         private void btnSaveExit_Click(object sender, EventArgs e)
         {
-            saveSettings();
+            SaveSettings();
         }
 
-        private void saveSettings()
+        private void SaveSettings()
         {
             try
             {
+                // Check if all settngs are valid
+                if (ValidatorDateTime(tbApiExcludeStart.Text) == false)
+                {
+                    MessageBox.Show("Error in excluded API start time", "Error in excluded API start time", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                if (ValidatorDateTime(tbApiExcludeEnd.Text) == false)
+                {
+                    MessageBox.Show("Error in excluded API end time", "Error in excluded API end time", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+
                 Settings.HyperionServerIp = tbIPHostName.Text;
                 Settings.HyperionServerPort = int.Parse(tbProtoPort.Text);
                 Settings.HyperionMessagePriority = int.Parse(cbMessagePriority.Text);
@@ -61,6 +84,13 @@ namespace HyperionScreenCap
                 Settings.CaptureInterval = int.Parse(tbCaptureInterval.Text);
                 Settings.MonitorIndex = int.Parse(cbMonitorIndex.Text);
                 Settings.ReconnectInterval = int.Parse(tbReconnectInterval.Text);
+                Settings.CaptureOnStartup = chkCaptureOnStartup.Checked;
+                Settings.ApiPort = int.Parse(tbApiPort.Text);
+                Settings.ApiEnabled = chkApiEnabled.Checked;
+                Settings.ApiExcludedTimesEnabled = chkApiExcludeTimesEnabled.Checked;
+                Settings.ApiExcludeTimeStart = DateTime.Parse(tbApiExcludeStart.Text);
+                Settings.ApiExcludeTimeEnd = DateTime.Parse(tbApiExcludeEnd.Text);
+
                 Settings.NotificationLevel =
                     (Form1.NotificationLevels) Enum.Parse(typeof(Form1.NotificationLevels), cbNotificationLevel.Text);
 
@@ -75,7 +105,7 @@ namespace HyperionScreenCap
             Close();
         }
 
-        private static bool validatorInt(string input, int minValue, int maxValue, bool validateMaxValue)
+        private static bool ValidatorInt(string input, int minValue, int maxValue, bool validateMaxValue)
         {
             bool isValid = false;
             int value;
@@ -100,11 +130,24 @@ namespace HyperionScreenCap
             return isValid;
         }
 
+        public Boolean ValidatorDateTime(string input)
+        {
+            DateTime dt;
+            Boolean IsValid = false;
+            bool isDateTime = DateTime.TryParse(input, out dt);
+            if (isDateTime)
+            {
+                IsValid = true;
+            }
+
+            return IsValid;
+        }
+
         private void tbProtoPort_Validating(object sender, CancelEventArgs e)
         {
             const int minValue = 1;
             const int maxValue = 65535;
-            if (validatorInt(tbProtoPort.Text, minValue, maxValue, false) == false)
+            if (ValidatorInt(tbProtoPort.Text, minValue, maxValue, false) == false)
             {
                 MessageBox.Show(@"Invalid integer filled for port");
             }
@@ -114,7 +157,7 @@ namespace HyperionScreenCap
         {
             const int minValue = 0;
             const int maxValue = 0;
-            if (validatorInt(cbMessagePriority.Text, minValue, maxValue, false) == false)
+            if (ValidatorInt(cbMessagePriority.Text, minValue, maxValue, false) == false)
             {
                 MessageBox.Show(@"Invalid integer filled for message priority");
             }
@@ -124,7 +167,7 @@ namespace HyperionScreenCap
         {
             const int minValue = 0;
             const int maxValue = 0;
-            if (validatorInt(cbMonitorIndex.Text, minValue, maxValue, false) == false)
+            if (ValidatorInt(cbMonitorIndex.Text, minValue, maxValue, false) == false)
             {
                 MessageBox.Show(@"Invalid integer filled for monitor index");
             }
@@ -134,7 +177,7 @@ namespace HyperionScreenCap
         {
             const int minValue = -1;
             const int maxValue = 0;
-            if (validatorInt(tbMessageDuration.Text, minValue, maxValue, false) == false)
+            if (ValidatorInt(tbMessageDuration.Text, minValue, maxValue, false) == false)
             {
                 MessageBox.Show(@"Invalid integer filled for message duration");
             }
@@ -144,7 +187,7 @@ namespace HyperionScreenCap
         {
             const int minValue = 0;
             const int maxValue = 0;
-            if (validatorInt(tbCaptureWidth.Text, minValue, maxValue, false) == false)
+            if (ValidatorInt(tbCaptureWidth.Text, minValue, maxValue, false) == false)
             {
                 MessageBox.Show(@"Invalid integer filled for capture width");
             }
@@ -154,7 +197,7 @@ namespace HyperionScreenCap
         {
             const int minValue = 0;
             const int maxValue = 0;
-            if (validatorInt(tbCaptureHeight.Text, minValue, maxValue, false) == false)
+            if (ValidatorInt(tbCaptureHeight.Text, minValue, maxValue, false) == false)
             {
                 MessageBox.Show(@"Invalid integer filled for capture height");
             }
@@ -164,7 +207,7 @@ namespace HyperionScreenCap
         {
             const int minValue = 0;
             const int maxValue = 0;
-            if (validatorInt(tbCaptureInterval.Text, minValue, maxValue, false) == false)
+            if (ValidatorInt(tbCaptureInterval.Text, minValue, maxValue, false) == false)
             {
                 MessageBox.Show(@"Invalid integer filled for capture interval");
             }
@@ -174,9 +217,35 @@ namespace HyperionScreenCap
         {
             const int minValue = 0;
             const int maxValue = 0;
-            if (validatorInt(tbReconnectInterval.Text, minValue, maxValue, false) == false)
+            if (ValidatorInt(tbReconnectInterval.Text, minValue, maxValue, false) == false)
             {
                 MessageBox.Show(@"Invalid integer filled for reconnect interval");
+            }
+        }
+
+        private void tbApiPort_Validating(object sender, CancelEventArgs e)
+        {
+            const int minValue = 1;
+            const int maxValue = 65535;
+            if (ValidatorInt(tbApiPort.Text, minValue, maxValue, false) == false)
+            {
+                MessageBox.Show(@"Invalid integer filled for port");
+            }
+        }
+
+        private void tbExcludeStart_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (ValidatorDateTime(tbApiExcludeStart.Text) == false)
+            {
+                MessageBox.Show("Error in excluded API start time", "Error in excluded API start time", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void tbExcludeEnd_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (ValidatorDateTime(tbApiExcludeEnd.Text) == false)
+            {
+                MessageBox.Show("Error in excluded API end time", "Error in excluded API end time", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }
